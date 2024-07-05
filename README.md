@@ -5,6 +5,10 @@
 
 Rather than reinventing the wheel, we will use some community maintained examples from [Rustlings](https://github.com/rust-lang/rustlings).
 
+`cargo install rustlings`
+
+`rustlings init`
+
 `cd rustlings`
 
 `rustlings`
