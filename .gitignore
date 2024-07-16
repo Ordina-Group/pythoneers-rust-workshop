@@ -4,3 +4,6 @@ Cargo.lock
 target
 .vscode
 .idea
+.ruff_cache
+.pytest_cache
+/data/nep/

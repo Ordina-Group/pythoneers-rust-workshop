@@ -20,6 +20,18 @@ navigate with `l`, `c`, `q`
 
 OR `cargo run --bin intro1`
 
+## Examples
+
+### Quick Sort
+
+### Load .csv data
+
+https://github.com/google-research/google-research/tree/master/goemotions
+
+in root, run this.
+`wget -P data/full_dataset/ https://storage.googleapis.com/gresearch/goemotions/data/full_dataset/goemotions_1.csv`
+if on windows, download them manually and put them in ./data/full_dataset/
+
 ## Rust Resources
 Reading:
 - [The Rust Book](https://doc.rust-lang.org/book/)
