@@ -34,10 +34,32 @@ pub fn fibonacci(n: u32) -> u32 {
     }
 }
 
+#[pyclass]
+struct RustStruct {
+    value: i32,
+}
+
+#[pymethods]
+impl RustStruct {
+    #[new]
+    fn new(value: i32) -> Self {
+        RustStruct { value }
+    }
+
+    fn increment(&mut self) {
+        self.value += 1;
+    }
+
+    fn get_value(&self) -> i32 {
+        self.value
+    }
+}
+
 #[pymodule]
 fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(hello_world, m)?)?;
     m.add_function(wrap_pyfunction!(create_dict, m)?)?;
+    m.add_class::<RustStruct>()?;
     m.add_function(wrap_pyfunction!(fibonacci, m)?)?;
     Ok(())
 }
