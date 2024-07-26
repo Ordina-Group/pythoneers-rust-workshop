@@ -226,3 +226,54 @@ fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 
 </details>
 
+
+### Exercize 5.1 (Bonus)
+parallel processing, multiple threads to be able to process items faster. 
+at first lets use the standaard lib of rust:
+`use std::thread;` [docs thread](https://doc.rust-lang.org/std/thread/)
+
+
+<details>
+<summary>Solution exersize 5.1</summary>
+
+```rust
+use pyo3::prelude::*;
+use std::collections::HashMap;
+use std::thread;
+
+fn count_words(sentence: &str) -> usize {
+    sentence.split_whitespace().count()
+}
+
+
+#[pyfunction]
+fn find_words(strings: Vec<String>) -> PyResult<Vec<usize>> {
+    let mut handles = vec![];
+
+    for s in strings {
+        let handle = thread::spawn(move || {
+            count_words(&s)
+        });
+        handles.push(handle);
+    }
+
+    let mut results = vec![];
+    for handle in handles {
+        results.push(handle.join().unwrap());
+    }
+
+    Ok(results)
+}
+
+#[pymodule]
+fn rust_python_threads(py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(find_words, m)?)?;
+    Ok(())
+}
+```
+</details>
+
+### Excersize 5.2 (Bonus,Bonus)
+
+now let's use some easy to use liberaries. ;)
+`use rayon::prelude::*;` [docs rayon](https://docs.rs/rayon/latest/rayon/index.html)

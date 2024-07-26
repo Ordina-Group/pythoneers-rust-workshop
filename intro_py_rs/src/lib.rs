@@ -1,6 +1,7 @@
 use pyo3::prelude::*;
 use pyo3::exceptions::PyValueError;
 use std::collections::HashMap;
+use std::thread;
 
 #[pyfunction]
 pub fn hello_world(name: String) -> PyResult<String> {
@@ -55,6 +56,30 @@ impl RustStruct {
     }
 }
 
+fn count_words(sentence: &str) -> usize {
+    sentence.split_whitespace().count()
+}
+
+
+#[pyfunction]
+fn find_words(strings: Vec<String>) -> PyResult<Vec<usize>> {
+    let mut handles = vec![];
+
+    for s in strings {
+        let handle = thread::spawn(move || {
+            count_words(&s)
+        });
+        handles.push(handle);
+    }
+
+    let mut results = vec![];
+    for handle in handles {
+        results.push(handle.join().unwrap());
+    }
+
+    Ok(results)
+}
+
 
 #[pymodule]
 fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -62,5 +87,6 @@ fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(create_dict, m)?)?;
     m.add_class::<RustStruct>()?;
     m.add_function(wrap_pyfunction!(fibonacci, m)?)?;
+    m.add_function(wrap_pyfunction!(find_words, m)?)?;
     Ok(())
 }
