@@ -2,10 +2,10 @@
 
 
 ## PyO3
-Using rust in python is like having only positives.
+To use the speed of Rust with the easy-to-read Python the PyO3 package is used.
 keep difficult logic in python and put easy but compute heavy resources in rust.
 to use PyO3 there are some basic steps.
-type in the root of your project:
+create a new rust library in the root of your project:
 `cargo new intro_py_rs --lib`.
 this will give you a rust lib made with 
 ```
@@ -21,51 +21,64 @@ But first we need to add in Cargo.toml PyO3 dependency
 [dependencies]
 pyo3 = { version = "0.22.1", features = ["extension-module"] }
 ```
-there are more options but this one is not optional.
 
 when you go to the folder `cd intro_py_rs`, you can compile and build the rust to python with:
-`maturin develop`
-That's all
+`maturin develop` instead of the usual `cargo build`
+`maturin develop` is building the rust library and inserting it in the python env.
 
 ### Exercise 1 
-as first let's check if all is up and running with a simple hello world
-`use pyo3::prelude::*;` this import is used to have the rust functions to convert to python. 
-
+First let's check if all is up and running with a simple hello world
+first we need to import the PyO3 library in our rust
+`use pyo3::prelude::*;` 
+#### Setup
 we can start building our function with 
 
 ```
 #[pyfunction]
-pub fn hello_world(name: String) -> PyResult<String> {
+fn hello_world(name: String) -> PyResult<String> {
     // here your function
 }
 ```
 the `#[pyfunction]` is a macro to let PyO3 know that it is a python function.
-To let make a module from this function and give it to python we need to wrap it in the module and make it public. 
+before we can use it in python we need to add it to our module that we will import in python.
 
+To add it to the module it needs to be wrapped into the public function.
+this is done by:
 ```
 #[pymodule]
 fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(hello_world, m)?)?;
 }
 ```
-this we do to "hang" the function that we wrote on the module
+This function needs to have the same name as the name in the `cargo.toml`, 
+so Rust knows where our entry is when building the package
+#### Exercise 1.1
+fill in the function `hello_world`, with the given input `"hello ... from rust"`
 
-to test 
-in the folder `intro_py_rs` `maturin develop` and starts compiling. 
-When compiler finishes (when error you need to fix your error ;) start a python console within your environment. 
+#### Compile to python
+When the function is complete enough to be testen in python you can compile it to the python env.
+
+go to the folder `cd intro_py_rs` and compile: `maturin develop` and starts compiling. 
+When compiler finishes (when error appears, you need to fix the error 😃) start a python console within your environment. 
+with the following you can test the code.
 ```
 >> from intro_py_rs import hello_world
 >> hellow_world("Name")
 ```
-but what happens when we want to tell python that's somthing went wrong 
+PyO3 has alot of different conversion to be able to raise for example exceptions for python in rust.
+for our `hello_world` we can use 
 `use pyo3::exceptions::PyValueError;` PyO3 has big list of conversions for python objects.
-[conversions/exceptions Pyo3](https://pyo3.rs/v0.11.0/exception)
+[exceptions Pyo3](https://pyo3.rs/v0.11.0/exception)
+
+#### Exercise 1.2
+add the exception to the hello world when we give it an empty string.
+
 <details>
-<summary>Solution</summary>
+<summary>Solution Exercise 1</summary>
 
 ```rust
 #[pyfunction]
-pub fn hello_world(name: String) -> PyResult<String> {
+fn hello_world(name: String) -> PyResult<String> {
     if name.trim().is_empty() {
         Err(PyValueError::new_err("Please provide a valid string!"))
     } else {
@@ -81,8 +94,8 @@ fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 </details>
 
 ### Exercise 2
-A frequently used function 'fibonnacci' is a good demo for the speed of rust while using Python
-so given python function
+Let's make a 'fibonnacci' as a demo for the speed of rust while using Python
+with the given python function it will take some time to finish with higher numbers.
 ```python
 def fibonacci_python(n):
     """pythonic fibonacci function"""
@@ -90,9 +103,8 @@ def fibonacci_python(n):
     if n == 1: return 1
     return fibonacci_python(n-1) + fibonacci_python(n-2)
 ```
-
-let's make the same function in rust, and call it from Python to see the speed difference:
-you can call you're function like a normal python package (after compiling)
+let's make the same function in rust, and call it from Python to see the speed difference.
+After compiling we should be able to call the fibonacci from rust like:
 ```python
 from intro_py_rs import fibonacci
 n= 40
@@ -124,8 +136,8 @@ fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 ### Exercise 3
 To have a more feeling about the datatransfer between the Rust and Python we can make a mapping tool to map 2 lists to a dict
 so let's say we have a list of keys and values. and we want them to collect and put it in a dict.
-in Rust a dict is a HashMap
-an example in python how we use our rust is:
+in Rust a dict is a HashMap [conversions Pyo3](https://pyo3.rs/v0.11.0/conversions) to check the possible conversions. 
+the goal is to be able to call the dict mapping function from python like this:
 ```python
 from intro_py_rs import create_dict
 
@@ -164,11 +176,11 @@ fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 </details>
 
 ### Exercise 4 
-Classes! what is python without class. in Rust class is pretty different but we can still make sort of the same structure
+Classes! in Rust class is pretty different, but we can still make sort of the same structure
 so let's build a class in rust that we initiate in python
-let's build a simple class (struct) in rust that holds a value. 
-We can increment the value by 1
-in the end in python we will have this working
+let's build a simple class like object (struct) in rust that holds a value. 
+We should be able to increment the value by 1 with a `increment()` function.
+the goal is to be able to do somthing like this in python:
 ```python
 from intro_py_rs import RustStruct
 
