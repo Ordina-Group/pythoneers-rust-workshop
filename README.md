@@ -20,6 +20,21 @@ navigate with `l`, `c`, `q`
 
 OR `cargo run --bin intro1`
 
+Exercises to work through:
+
+1. intro2 (printing)
+2. variables1 (initialisation)
+3. variables4 (mutability)
+4. variables5 (shadowing)
+5. functions4 (signature)
+6. functions5 (return), there is no return!
+7. if1 (conditional)
+8. primitive_types3 (array)
+9. move_semantics2 (ownership)
+10. move_semantics5 (references)
+11. structs2 (struct)
+12. hashmaps1 (python dict)
+
 ## Rust Resources
 Reading:
 - [The Rust Book](https://doc.rust-lang.org/book/)
