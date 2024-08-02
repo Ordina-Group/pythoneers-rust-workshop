@@ -303,7 +303,7 @@ fn rust_python_threads(py: Python, m: &PyModule) -> PyResult<()> {
 ```
 </details>
 
-### Excersize 5.2 (Bonus,Bonus)
+### Exercise 5.2 (Bonus, Bonus)
 
 you can try out adding A good community lib for parallel processing instead of the standard library:
 `use rayon::prelude::*;` [docs rayon](https://docs.rs/rayon/latest/rayon/index.html)
