@@ -254,7 +254,7 @@ fn intro_py_rs(_py: Python, m: &PyModule) -> PyResult<()> {
 </details>
 
 
-### Exercize 5.1 (Bonus)
+### Exercise 5.1 (Bonus)
 Parallel processing using multiple threads can help process items faster. First, let's use Rust's standard library:
 `use std::thread;` [docs thread](https://doc.rust-lang.org/std/thread/)
 The goal of this assignment is to receive a list of strings from Python. 
