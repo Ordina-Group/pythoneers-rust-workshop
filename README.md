@@ -46,6 +46,7 @@ Excercises:
 ## PyO3
 To combine the speed of Rust with the readability of Python, we use the PyO3 package. 
 Keep difficult logic in Python and put easy but compute-heavy tasks in Rust. To use PyO3, follow these basic steps:
+to use PyO3 we need to have `maturin` in the python environment, you can install it with: `pip install maturin`.
 
 Create a new Rust library in the root of your project:
 `cargo new intro_py_rs --lib`.
